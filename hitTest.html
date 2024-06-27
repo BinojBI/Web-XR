@@ -9,6 +9,7 @@
   </head>
 
   <body>
+    <script src="https://unpkg.com/three@0.126.0/examples/js/loaders/GLTFLoader.js"></script>
     <script type="module">
       // In this example you should be able to place a cone on top of a surface (like a floor or table)
       // On your phone, you have to tap the screen to place a phone where the circle shows up
@@ -18,6 +19,7 @@
 
       let container;
       let camera, scene, renderer;
+      let loader;
       let reticle;
       let controller;
 
@@ -89,12 +91,41 @@
             color: 0xffffff * Math.random()
           });
           const mesh = new THREE.Mesh(geometry, material);
-          
-          // set the position of the cylinder based on where the reticle is          
-          mesh.position.setFromMatrixPosition(reticle.matrix);
-          mesh.quaternion.setFromRotationMatrix(reticle.matrix);
 
-          scene.add(mesh); 
+          const modelUrl = './shiba/scene.gltf';
+         loader = new THREE.GLTFLoader();
+         loader.load(
+				// model URL
+				modelUrl,
+				// onLoad callback: what get's called once the full model has loaded
+				function (gltf) {
+					//gltf.scene.position.z = -3;
+					
+          // gltf.scene contains the Three.js object group that represents the 3d object of the model
+					scene.add(gltf.scene);
+          console.log("Model added to scene");
+          gltf.scene.scale.set(0.1,0.1,0.1);
+          // you can optionally change the position of the model
+          gltf.scene.position.setFromMatrixPosition(reticle.matrix);
+          gltf.scene.quaternion.setFromRotationMatrix(reticle.matrix);
+          // gltf.scene.position.z = -10; // negative Z moves the model in the opposite direction the camera is facing
+          // gltf.scene.position.y = 5; // positive Y moves the model up
+          // gltf.scene.position.x = 10; // positive X moves hte model to the right
+				},
+                	// onProgress callback: optional function for showing progress on model load
+				function (xhr) {
+		      // console.log((xhr.loaded / xhr.total * 100) + '% loaded' );
+	      },
+				// onError callback
+				function (error) {
+					console.error(error);
+				}
+			);
+          // set the position of the cylinder based on where the reticle is          
+          //mesh.position.setFromMatrixPosition(reticle.matrix);
+          //mesh.quaternion.setFromRotationMatrix(reticle.matrix);
+
+          //scene.add(mesh); 
         }
       }
 

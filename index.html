@@ -47,13 +47,15 @@
       // Look for "geometry" in the three.js documentation to find all the geometry types
       // https://threejs.org/docs/index.html
 
-      const modelUrl = 'https://raw.githubusercontent.com/immersive-web/webxr-samples/main/media/gltf/space/space.gltf';
+      const modelUrl = './shiba/scene.gltf';
       loader = new THREE.GLTFLoader();
       loader.load(
 				// model URL
 				modelUrl,
 				// onLoad callback: what get's called once the full model has loaded
 				function (gltf) {
+					gltf.scene.position.z = -3;
+					//gltf.scene.scale.set(0.1,0.1,0.1);
           // gltf.scene contains the Three.js object group that represents the 3d object of the model
 					scene.add(gltf.scene);
           console.log("Model added to scene");
